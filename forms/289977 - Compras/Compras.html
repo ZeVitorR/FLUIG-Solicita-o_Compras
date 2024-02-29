@@ -1,0 +1,147 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="compras.js"></script>
+	<script type="text/javascript" src="apiFluig.js"></script>
+	<script type="text/javascript" src="FLUIGIP.js"></script>
+</head>
+<body>
+	<div class="fluig-style-guide" onmouseenter="verificaExistencia()">
+		<form name="form" role="form" >
+			<div class="panel panel-default"><!--Div usado para definir o painel do formulario-->
+				<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->	
+					<div class="flex-container">
+						<div class="flex-item">
+							<img src="./logo.png" alt="logo da thcm" width="50%"/><!--Colocando o logo da THCM-->
+						</div>
+						<div class="flex-item" >
+							<h1>Solicitação de Compras</h1>
+							<p id="dataAtual"></p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel-body"><!--Parte referente ao corpo do formulario ou seja onde vai as perguntas-->
+					<fieldset>
+						<input type="number" id="valorTotal" name="valorTotal" hidden>
+						<div class="row form-group"><!--Definido a div da linha da pergunda-->
+							<input type="text" id="horaAtual" name="horaAtual" hidden><!--Parte responsável por deixar o campo obrigatório-->
+							<div class="col-md-6"><!--Definindo o tamanho que vai ter o campo podendo ser de 1 a 18-->
+								<label class="control-label" for="origem">Local: </label>
+								<input type="text" id="origem" name="origem" class="form-control form-control-sm"
+								data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0" ><!--Parte responsável por deixar o campo obrigatório-->
+							</div>
+							<div class="col-md-2">
+								<label class="control-label" for="dataOrigem">Data: </label>
+								<input type="date" id="dataOrigem" name="dataOrigem" class="form-control form-control-sm"
+								data-fluig-required="true" data-fluig-write="0" data-fluig-state-valid="0"><!--Parte responsável por deixar o campo obrigatório-->
+							</div>
+							<input type="text" id="dataAtual2" name="dataAtual2" hidden>
+							<input type="text" id="solici" name="solici" hidden>
+						</div>		
+					</fieldset>
+					<fieldset>
+						<legend>Relação das Compras</legend>
+						<div class="form-field" data-type="tabledetail" data-show-properties="teste" data-field-name="teste">
+							<div class="form-input">
+								<div class="form-group">
+									<table tablename="tabledetailname1" class="table" noaddbutton="true">
+										<thead>
+											<tr class="tableHeadRow">
+												<th class="tableColumn" class="col-xs-1 col-md-1">Item</th>
+												<th class="tableColumn" class="col-xs-5 col-md-5">Descrição</th>
+												<th class="tableColumn" class="col-xs-1 col-md-1">Quantidade</th>
+												<th class="tableColumn" class="col-xs-3 col-md-3">Valor(un) </th>
+												<th class="tableColumn" class="col-xs-3 col-md-3">Valor(Total)</th>
+												
+											</tr>
+										</thead>
+										<tbody >
+											<tr class="tableBodyRow">
+												<td class="fs-v-align-middle col-xs-1 col-md-1">
+													<div class="form-input " >
+														<input type="text" name="column1_1" id="item1" class="form-control col-md-1" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="100" data-fluig-state-valid="100" >
+													</div>
+												</td>
+												<td class="fs-v-align-middle col-xs-5 col-md-5">
+													<div class="form-input ">
+														<input type="text" name="column2_1" id="descricao1" class="form-control" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="0" data-fluig-state-valid="0" >
+													</div>
+												</td>
+												<td class="fs-v-align-middle col-xs-1 col-md-1">
+													<div class="form-input ">
+														<input type="number" name="column3_1" id="quantidade1" class="form-control" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="0" data-fluig-state-valid="0" min="1">
+													</div>
+												</td>
+												<td class="fs-v-align-middle col-xs-3 col-md-3">
+													<div class="input-group ">
+														<span class="input-group-addon">R$</span>
+														<input type="number" name="column4_1" id="column4_1" class="form-control" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="0" data-fluig-state-valid="0" min="0" onblur="SomaUn(this.id)">
+													</div>
+												</td>
+												<td class="fs-v-align-middle col-xs-3 col-md-3">
+													<div class="input-group ">
+														<span class="input-group-addon">R$</span>
+														<input type="number" name="column5_1" id="column5_1" class="form-control" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="50" data-fluig-state-valid="50" min="0" >
+													</div>
+												</td>
+												
+											</tr>
+										</tbody>
+										<tfoot>
+											<tr id="Show1">
+												<td id="remove" colspan="5">
+												</td>
+											
+												<td>
+													<label class="control-label" for="totalG">Valor Total Geral:</label>
+													<div class="input-group ">
+														<span class="input-group-addon">R$</span>
+														<input type="number" id="totalG" name="totalG" class="form-control" label="teste" spellcheck="false" data-ms-editor="true"
+														data-fluig-write="50" data-fluig-state-valid="50">
+													</div>
+													
+												</td>
+											</tr>
+											<tr>
+												<td colspan="5"><p class="obs">Observação: Em caso de lista de compra maior que 10 itens diferentes, anexe a lista na parte dos anexos</p></td>
+											</tr>
+										</tfoot>
+									</table>
+									
+									<button type="button" class="btn btn-primary" onclick="adicionarLinha()">Adicionar</button>
+								</div>
+								
+							</div>
+						</div>
+					</fieldset>
+					<fieldset id="historico">
+						<div class="panel panel-primary">
+							<div class="panel-heading"><!--Div para definir o cabeçalho do formulario-->
+								Histórico do Processo
+							</div>
+							<div class="panel-body" id="hist">
+							</div>									
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script>
+		
+
+		
+	</script>
+</body>
+</html>
